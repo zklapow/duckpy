@@ -17,7 +17,7 @@ class Timeline():
 	def __init__(self, url, api=None):
 		self.url = url
 		self.api = api
-		self.api_add_widget(self)
+		self.api._add_widget(self)
 	
 	def update(self, title, image, content, link=None, key=None):
 		if type(image) is file:
@@ -31,7 +31,8 @@ class Timeline():
 			
 		timestamp = time.time()
 		
-		return self.api._open(self.url, json.dumps({'timestamp': timestamp, 'value':value})
+		return self.api._open(self.url, json.dumps({'timestamp': timestamp, 'value':value}))
+	
 
 class Image():
 	def __init__(self, url, api=None):
@@ -47,6 +48,7 @@ class Image():
 		timestamp = time.time()
 		
 		return self.api._open(self.url, json.dumps({'timestamp': timestamp, 'value': {'source': image, 'caption':caption}}))
+
 
 class Numeric():
 	def __init__(self, url, api=None):
@@ -78,6 +80,7 @@ class Numeric():
 		else:
 			return self.api._open(self.url, json.dumps({"value": value, "timestamp": timestamp}))
 		
+
 class Counter(Numeric):
 	pass
 
