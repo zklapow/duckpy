@@ -1,6 +1,4 @@
-duckpy
-------
-duckpy is a simple python package, based on urllib2, which allows you to interface with the ducksboard API.
+duckpy is a dead simple python package, based on urllib2, which allows you to interface with the ducksboard API.
 
 Usage
 -----
