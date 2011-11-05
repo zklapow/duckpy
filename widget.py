@@ -2,6 +2,7 @@
 
 import urllib2
 import json
+import time
 
 class Numeric():
 	def __init__(self, url, api=None):
@@ -22,12 +23,16 @@ class Numeric():
 			element : The element in a multi-part widget to be updated. If none all are updated
 			key : An API key if not using the API class
 		"""
+		timestamp = time.time()
+		
 		if element is None and self.multi is True:
 			# Update all urls
-			pass
+			for x in self.url:
+				self.api._open(x, json.dumps({"value": value, "timestamp": timestamp}))
+		elif element:
+			self.api._open(self.url[element], json.dumps({"value": value, "timestamp": timestamp}}))
 		else:
-			self.api._open(self.url, json.dumps({"value": value}))
+			self.api._open(self.url, json.dumps({"value": value, "timestamp": timestamp}}))
 		
 class Counter(Numeric):
 	pass
-		
