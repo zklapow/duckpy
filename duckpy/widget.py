@@ -6,6 +6,33 @@ import time
 import base64
 import cStringIO
 
+class Timeline():
+	orange = "https://dashboard.ducksboard.com/static/img/timeline/orange.gif"
+	red = "https://dashboard.ducksboard.com/static/img/timeline/red.gif"
+	green = "https://dashboard.ducksboard.com/static/img/timeline/green.gif"
+	created = "https://dashboard.ducksboard.com/static/img/timeline/created.gif"
+	edited = "https://dashboard.ducksboard.com/static/img/timeline/edited.gif"
+	deleted = "https://dashboard.ducksboard.com/static/img/timeline/deleted.gif"
+	
+	def __init__(self, url, api=None):
+		self.url = url
+		self.api = api
+		self.api_add_widget(self)
+	
+	def update(self, title, image, content, link=None, key=None):
+		if type(image) is file:
+			image = base64.b64encode(image.read())
+			image = 'data:image/png;base64,%s'%image
+		
+		if link is not None:
+			value = {'title': title, 'image':image, 'content': content, 'link':link}
+		else:
+			value = {'title': title, 'image':image, 'content': content}
+			
+		timestamp = time.time()
+		
+		return self.api._open(self.url, json.dumps({'timestamp': timestamp, 'value':value})
+
 class Image():
 	def __init__(self, url, api=None):
 		self.url = url
@@ -15,10 +42,11 @@ class Image():
 	def update(self, image, caption, key = None):
 		if type(image) is file:
 			image = base64.b64encode(image.read())
+			image = 'data:image/png;base64,%s'%image
 		
 		timestamp = time.time()
 		
-		return self.api._open(self.url, json.dumps({'value': {'source':'data:image/png;base64,%s'%image, 'caption':caption, 'timestamp':timestamp}}))
+		return self.api._open(self.url, json.dumps({'timestamp': timestamp, 'value': {'source': image, 'caption':caption}}))
 
 class Numeric():
 	def __init__(self, url, api=None):
