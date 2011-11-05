@@ -3,6 +3,22 @@
 import urllib2
 import json
 import time
+import base64
+import cStringIO
+
+class Image():
+	def __init__(self, url, api=None):
+		self.url = url
+		self.api = api
+		self.api._add_widget(self)
+		
+	def update(self, image, caption, key = None):
+		if type(image) is file:
+			image = base64.b64encode(image.read())
+		
+		timestamp = time.time()
+		
+		return self.api._open(self.url, json.dumps({'value': {'source':'data:image/png;base64,%s'%image, 'caption':caption, 'timestamp':timestamp}}))
 
 class Numeric():
 	def __init__(self, url, api=None):
@@ -28,11 +44,11 @@ class Numeric():
 		if element is None and self.multi is True:
 			# Update all urls
 			for x in self.url:
-				self.api._open(x, json.dumps({"value": value, "timestamp": timestamp}))
+				return self.api._open(x, json.dumps({"value": value, "timestamp": timestamp}))
 		elif element:
-			self.api._open(self.url[element], json.dumps({"value": value, "timestamp": timestamp}))
+			return self.api._open(self.url[element], json.dumps({"value": value, "timestamp": timestamp}))
 		else:
-			self.api._open(self.url, json.dumps({"value": value, "timestamp": timestamp}))
+			return self.api._open(self.url, json.dumps({"value": value, "timestamp": timestamp}))
 		
 class Counter(Numeric):
 	pass
@@ -54,4 +70,4 @@ class Gauge(Numeric):
 		if value < 0 or value > 1:
 			print "Values for Gauges should be between 0 and 1, the value given is not."
 		else:
-			Numeric.update(self, value, element, key)
+			return Numeric.update(self, value, element, key)
